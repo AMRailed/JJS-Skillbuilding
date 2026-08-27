@@ -36,8 +36,143 @@
     .tab:hover { background: #1f1f1f; color: #fff; }
     .tab.active {
         background: #272727;
-        color: #ffd400;
-        border-bottom: 3px solid #ffd400;
+        color: #ffffff;
+    }
+
+    #skillset-block {
+        background:#1e293b;
+        border:1px solid #334155;
+        border-radius:12px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.3);
+        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;max-width:650px;
+        color:#e2e8f0;
+        overflow:hidden;
+        margin:10px auto;
+    }
+
+    #skillset-content {
+        padding:4px 12px 0px 12px;
+        background:#0f172a;
+        border-bottom:1px solid #334155;
+    }
+
+    #skillset-top {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        margin-bottom:0px;
+    }
+
+    #skillset-title {
+        margin:0;
+        font-size:20px;
+        font-weight:800;
+        color:#ffffff;
+        letter-spacing:0.5px;
+        padding:10px 15px;
+    }
+
+    #skillset-tag {
+        color:#ffffff;
+        font-size:14px;
+        font-weight:800;
+        text-transform:uppercase;
+        padding:4px 12px;
+        border-radius:4px;
+        letter-spacing:0.5px;
+        position:relative;
+        top:2px;
+            bottom:2px;
+    }
+
+    #skillset-subcontent {
+        display:flex;
+        gap:12px;
+        align-items:flex-start;
+    }
+
+    #skillset-subsubcontent {
+        flex:1;
+        display:flex;
+        flex-direction:column;
+        gap:6px;
+    }
+
+    #skillset-descriptionblock {
+        background:transparent;
+        border:1px solid #334155;
+        border-left:10px solid #38bdf8;
+        border-radius:6px;
+        padding:6px 10px;
+    }
+
+    #skillset-description {
+        font-size:13px;
+        line-height:1.35;
+        font-weight:400;
+        color:#ffffff;
+        white-space:pre-line;
+    }
+
+    #skillset-propertyblock {
+        display:flex;
+        flex-wrap:wrap;
+        gap:2px;
+        align-items:flex-start;
+    }
+
+    #skillset-property {
+        display:inline-block;
+        color: white;
+        font-size:9px;
+        font-weight:800;
+        text-transform:uppercase;
+        padding:3px 10px;
+        border-radius:20px;
+        letter-spacing:0.5px;
+    }
+
+    #skillset-demonstration {
+        display:flex;
+        gap:12px;
+        align-items:flex-start;
+    }
+
+    #skillset-demonstration-content {
+        height:auto;
+        width:auto;
+        background:gray;
+        border:1.5px solid white;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+    #skillset-data {
+        display:flex;
+        background:#0f172a;
+    }
+
+    #skillset-subdata {
+        flex:1;
+        padding:4px 6px;
+        text-align:center;
+        border-right:1px solid #334155;
+    }
+
+    #skillset-subdata-title {
+        font-size:10px;
+        font-weight:700;
+        color:#94a3b8;
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+        margin-bottom:0px;
+    }
+
+    #skillset-subdata-content {
+        font-size:13px;
+        font-weight:700;
+        color:#cbd5e1;
     }
 </style>
 </head>
@@ -50,7 +185,7 @@
 </div>
 
 <script src="./primejudge.js"></script>
-<script src="./disgrace.js"></script><script src="./disgrace.js"></script>
+<script src="./disgrace.js"></script>
 
 <script type="module">
 import { data } from "./content.js"
@@ -58,8 +193,6 @@ const CURRENT_VERSION = "1.0.0.0"
 
 const TabsEm = document.getElementById("tabs");
 const ContentEm = document.getElementById("content");
-
-let Highlights = [];
 
 function escapeHtml(text) {
     return text
@@ -70,10 +203,96 @@ function escapeHtml(text) {
 
 function render(text) {
     const safe = escapeHtml(text);
-    contentEl.innerHTML = `<pre>${safe}</pre>`;
+    ContentEm.innerHTML = `<pre>${safe}</pre>`;
 }
 
-render(data[Info]);
+function renderSkillset(skillset) {
+    let append = ``;
+
+    Object.keys(skillset).forEach(key => {
+        let item = skillset[key];
+        let properties = ``;
+        let skilldata = ``;
+
+        Object.keys(item.Properties).forEach(propKey => {
+            let prop = item.Properties[propKey];
+            properties += `<div id="skillset-property" style="background: #020202;">${escapeHtml(prop)}</div>`;
+        });
+
+        Object.keys(item.Data).forEach(dataKey => {
+            let data = item.Data[dataKey];
+            skilldata += `<div id="skillset-subdata">
+                <div id="skillset-subdata-title">${escapeHtml(dataKey)}</div>
+                <div id="skillset-subdata-content">${escapeHtml(data)}</div>
+            </div>`;
+        });
+
+        append += `<div id="skillset-block">
+    <div id="skillset-content">
+        <div id="skillset-top">
+        <h2 id="skillset-title">
+            <span class="mw-headline">
+                <span style="text-shadow: 0 0 5px ${item.NameColors.ShadowColor}; color: ${item.NameColors.Color};">
+                    <b>${escapeHtml(item.Name)}</b>
+                </span>
+            </span>
+        </h2>
+        <span id="skillset-tag" style="background: ${item.Tag.Color};">${escapeHtml(item.Tag.Text)}</span>
+        </div>
+        <div id="skillset-subcontent">
+            <div id="skillset-demonstration">
+                <div id="skillset-demonstration-content">
+                    <img src="./contents/noimage.jpg" alt=""></img>
+                </div>
+            </div>
+            <div id="skillset-subsubcontent">
+                <div id="skillset-descriptionblock">
+                    <div id="skillset-description">${escapeHtml(item.Description)}</div>
+                </div>
+                <div id="skillset-propertyblock">
+                    ${properties}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="skillset-data">
+        ${skilldata}
+    </div>
+</div>`
+
+ContentEm.innerHTML = append;
+});
+} 
+
+function createTab(key) {
+    const div = document.createElement("div");
+    div.className = "tab";
+    div.textContent = key;
+    div.dataset.key = key;
+
+    div.onclick = () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        div.classList.add("active");
+
+        let rawData = data[key] || "Content not found";
+
+            ContentEm.dataset.raw = rawData.Content;
+
+            if (rawData.Skillset) {
+                renderSkillset(rawData.Skillset);
+            } else {
+                render(rawData.Content || "No content available.");
+            }
+    };
+
+    TabsEm.appendChild(div);
+}
+
+Object.keys(data).forEach(key => createTab(key));
+
+const firstTab = TabsEm.querySelector(".tab");
+if (firstTab) firstTab.click();
+
 </script>
 </body>
 </html>
