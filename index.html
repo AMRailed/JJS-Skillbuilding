@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Skillbuilder Characters</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        background: #0f0f0f;
+        color: #eaeaea;
+        font-family: Arial, Helvetica, sans-serif;
+        overflow-x: hidden;
+    }
+    #container { display: flex; flex-direction: column; min-height: 100vh; }
+	
+	#tabs {
+        width: 100%;
+        background: #151515;
+        border-bottom: 2px solid #222;
+        overflow-x: auto;
+        padding: 8px 0;
+
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .tab {
+        display: inline-block   ;
+        padding: 14px 18px;
+        cursor: pointer;
+        color: #ccc;
+        transition: all .2s;
+    }
+    .tab:hover { background: #1f1f1f; color: #fff; }
+    .tab.active {
+        background: #272727;
+        color: #ffd400;
+        border-bottom: 3px solid #ffd400;
+    }
+</style>
+</head>
+<body>
+<div id="container">
+    <div id="tabs"></div>
+    <div id="content-area">
+        <div id="content">Loading...</div>
+    </div>
+</div>
+
+<script src="./primejudge.js"></script>
+<script src="./disgrace.js"></script><script src="./disgrace.js"></script>
+
+<script type="module">
+import { data } from "./content.js"
+const CURRENT_VERSION = "1.0.0.0"
+
+const TabsEm = document.getElementById("tabs");
+const ContentEm = document.getElementById("content");
+
+let Highlights = [];
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function render(text) {
+    const safe = escapeHtml(text);
+    contentEl.innerHTML = `<pre>${safe}</pre>`;
+}
+
+render(data[Info]);
+</script>
+</body>
+</html>
