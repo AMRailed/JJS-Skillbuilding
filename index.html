@@ -39,6 +39,69 @@
         color: #ffffff;
     }
 
+    #characterinfo-block {
+        background:#1e293b;
+        border:1px solid #334155;
+        border-radius:12px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.3);
+        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;max-width:650px;
+        color:#e2e8f0;
+        overflow:hidden;
+        margin:10px auto;
+    }
+
+    #characterinfo-top {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        margin-bottom:0px;
+    }
+
+    #characterinfo-title {
+        margin:0;
+        font-size:20px;
+        font-weight:800;
+        letter-spacing:0.5px;
+        padding:10px 15px;  
+    }
+
+    #characterinfo-descriptionblock {
+        background:transparent;
+        border:1px solid #334155;
+        border-top:10px solid #38bdf8;
+        border-radius:6px;
+        padding:6px 10px;
+        margin:10px 12px 10px 12px;
+    }
+
+    #characterinfo-description {
+        font-size:13px;
+        line-height:1.35;
+        font-weight:400;
+        color:#ffffff;
+        white-space:pre-line;
+    }
+
+    #characterinfo-copyblock {
+        background:transparent;
+        border:1px solid #334155;
+        align-items:center;
+        border-radius:6px;
+        padding:6px 10px;
+        margin:10px 12px 10px 12px;
+        padding: 10px 6px;
+    }
+    
+    .characterinfo-copybutton {
+        background:#5d789d;
+        padding:4px 12px 4px 12px;
+        border-radius:6px;
+        font-size:13px;
+        font-weight:700;
+        text-align:center;
+    }
+    .characterinfo-copybutton:hover { background: #34517a; color: #fff; }
+
     #skillset-block {
         background:#1e293b;
         border:1px solid #334155;
@@ -188,7 +251,7 @@
 <script src="./disgrace.js"></script>
 
 <script type="module">
-import { data } from "./content.js"
+import { hData, data } from "./content.js"
 const CURRENT_VERSION = "1.0.0.0"
 
 const TabsEm = document.getElementById("tabs");
@@ -206,8 +269,27 @@ function render(text) {
     ContentEm.innerHTML = `<pre>${safe}</pre>`;
 }
 
-function renderSkillset(skillset) {
-    let append = ``;
+function renderCharacter(character) {
+    const characterInfo = character.CharacterInfo;
+    const skillset = character.Skillset;
+    
+    let append = `<div id="characterinfo-block">
+        <div id="characterinfo-content">
+            <div id="characterinfo-top">
+                <h2 id="characterinfo-title">
+                    <span style="text-shadow: 0 0 5px ${characterInfo.NameColors.ShadowColor}; color: ${characterInfo.NameColors.Color};">
+                        <b>${escapeHtml(characterInfo.Name)}</b>
+                    </span>
+                </h2>
+            </div>
+            <div id="characterinfo-descriptionblock">
+                <div id="characterinfo-description">${escapeHtml(characterInfo.Description)}</div>
+            </div>
+            <div id="characterinfo-copyblock">
+                <div id=${characterInfo.CCTag} class="characterinfo-copybutton">Copy</div>
+             </div>
+        </div>
+    </div>`;
 
     Object.keys(skillset).forEach(key => {
         let item = skillset[key];
@@ -227,41 +309,59 @@ function renderSkillset(skillset) {
             </div>`;
         });
 
-        append += `<div id="skillset-block">
-    <div id="skillset-content">
-        <div id="skillset-top">
-        <h2 id="skillset-title">
-            <span class="mw-headline">
-                <span style="text-shadow: 0 0 5px ${item.NameColors.ShadowColor}; color: ${item.NameColors.Color};">
-                    <b>${escapeHtml(item.Name)}</b>
+        append += `
+    <div id="skillset-block">
+        <div id="skillset-content">
+            <div id="skillset-top">
+            <h2 id="skillset-title">
+                <span class="mw-headline">
+                    <span style="text-shadow: 0 0 5px ${item.NameColors.ShadowColor}; color: ${item.NameColors.Color};">
+                        <b>${escapeHtml(item.Name)}</b>
+                    </span>
                 </span>
-            </span>
-        </h2>
-        <span id="skillset-tag" style="background: ${item.Tag.Color};">${escapeHtml(item.Tag.Text)}</span>
-        </div>
-        <div id="skillset-subcontent">
-            <div id="skillset-demonstration">
-                <div id="skillset-demonstration-content">
-                    <img src="./contents/noimage.jpg" alt=""></img>
+            </h2>
+            <span id="skillset-tag" style="background: ${item.Tag.Color};">${escapeHtml(item.Tag.Text)}</span>
+            </div>
+            <div id="skillset-subcontent">
+                <div id="skillset-demonstration">
+                    <div id="skillset-demonstration-content">
+                        <img src="./contents/noimage.jpg" alt=""></img>
+                    </div>
+                </div>
+                <div id="skillset-subsubcontent">
+                    <div id="skillset-descriptionblock">
+                        <div id="skillset-description">${escapeHtml(item.Description)}</div>
+                    </div>
+                    <div id="skillset-propertyblock">
+                        ${properties}
+                    </div>
                 </div>
             </div>
-            <div id="skillset-subsubcontent">
-                <div id="skillset-descriptionblock">
-                    <div id="skillset-description">${escapeHtml(item.Description)}</div>
-                </div>
-                <div id="skillset-propertyblock">
-                    ${properties}
-                </div>
-            </div>
         </div>
-    </div>
-    <div id="skillset-data">
-        ${skilldata}
-    </div>
-</div>`
+        <div id="skillset-data">
+            ${skilldata}
+        </div>
+    </div>`
 
-ContentEm.innerHTML = append;
-});
+    });
+
+    ContentEm.innerHTML = append;
+
+    ContentEm.querySelectorAll(".characterinfo-copybutton").forEach(button => {
+        button.onclick = () => {
+            const cctag = button.id;
+            let text = hData.CCTags[cctag];
+
+            if (text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert("Character code copied to clipboard!");
+                });
+            }
+            else {
+                alert("Character code not found, "+cctag+".");
+            }
+        };
+    });
 } 
 
 function createTab(key) {
@@ -279,7 +379,7 @@ function createTab(key) {
             ContentEm.dataset.raw = rawData.Content;
 
             if (rawData.Skillset) {
-                renderSkillset(rawData.Skillset);
+                renderCharacter(rawData);
             } else {
                 render(rawData.Content || "No content available.");
             }
