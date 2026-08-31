@@ -39,6 +39,32 @@
         color: #ffffff;
     }
 
+	#subtabs {
+        width: 100%;
+        background: #151515;
+        border-bottom: 2px solid #222;
+        border-top: 2px solid #222;
+        overflow-x: auto;
+        padding: 8px 0;
+
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .no-subtabs { display: none; }
+    .subtab {
+        display: inline-block   ;
+        padding: 14px 18px;
+        cursor: pointer;
+        color: #ccc;
+        transition: all .2s;
+    }
+    .subtab:hover { background: #1f1f1f; color: #fff; }
+    .subtab.active {
+        background: #272727;
+        color: #ffffff;
+    }
+
     #characterinfo-block {
         background:#1e293b;
         border:1px solid #334155;
@@ -79,6 +105,16 @@
         line-height:1.35;
         font-weight:400;
         color:#ffffff;
+        white-space:pre-line;
+    }
+
+    #characterinfo-flavortext {
+        font-size:13px;
+        line-height:1.35;
+        font-weight:400;
+        font-style:italic;
+        text-indent: 30px;
+        color:#a9a9a9;
         white-space:pre-line;
     }
 
@@ -144,8 +180,8 @@
         border-radius:4px;
         letter-spacing:0.5px;
         position:relative;
-        top:2px;
-            bottom:2px;
+        top: 2px;
+        bottom: 2px;
     }
 
     #skillset-subcontent {
@@ -174,6 +210,16 @@
         line-height:1.35;
         font-weight:400;
         color:#ffffff;
+        white-space:pre-line;
+    }
+
+    #skillset-flavortext {
+        font-size:13px;
+        line-height:1.35;
+        font-weight:400;
+        font-style:italic;
+        text-indent: 30px;
+        color:#a9a9a9;
         white-space:pre-line;
     }
 
@@ -244,6 +290,8 @@
     <div id="tabs"></div>
     <div id="content-area">
         <div id="content">Loading...</div>
+        <div id="subtabs"></div>
+        <div id="subcontent"></div>
     </div>
 </div>
 
@@ -256,6 +304,8 @@ const CURRENT_VERSION = "1.0.0.0"
 
 const TabsEm = document.getElementById("tabs");
 const ContentEm = document.getElementById("content");
+const SubTabsEm = document.getElementById("subtabs");
+const SubContentEm = document.getElementById("subcontent");
 
 function escapeHtml(text) {
     return text
@@ -267,29 +317,13 @@ function escapeHtml(text) {
 function render(text) {
     const safe = escapeHtml(text);
     ContentEm.innerHTML = `<pre>${safe}</pre>`;
+    SubTabsEm.innerHTML = "";
+    subtabs.classList.add("no-subtabs");
+    SubContentEm.innerHTML = "";
 }
 
-function renderCharacter(character) {
-    const characterInfo = character.CharacterInfo;
-    const skillset = character.Skillset;
-    
-    let append = `<div id="characterinfo-block">
-        <div id="characterinfo-content">
-            <div id="characterinfo-top">
-                <h2 id="characterinfo-title">
-                    <span style="text-shadow: 0 0 5px ${characterInfo.NameColors.ShadowColor}; color: ${characterInfo.NameColors.Color};">
-                        <b>${escapeHtml(characterInfo.Name)}</b>
-                    </span>
-                </h2>
-            </div>
-            <div id="characterinfo-descriptionblock">
-                <div id="characterinfo-description">${escapeHtml(characterInfo.Description)}</div>
-            </div>
-            <div id="characterinfo-copyblock">
-                <div id=${characterInfo.CCTag} class="characterinfo-copybutton">Copy</div>
-             </div>
-        </div>
-    </div>`;
+function renderSkillset(skillset) {
+    let append = ``;
 
     Object.keys(skillset).forEach(key => {
         let item = skillset[key];
@@ -331,6 +365,7 @@ function renderCharacter(character) {
                 <div id="skillset-subsubcontent">
                     <div id="skillset-descriptionblock">
                         <div id="skillset-description">${escapeHtml(item.Description)}</div>
+                        <div id="skillset-flavortext">- ${escapeHtml(item.FlavorText)}</div>
                     </div>
                     <div id="skillset-propertyblock">
                         ${properties}
@@ -344,6 +379,53 @@ function renderCharacter(character) {
     </div>`
 
     });
+
+    SubContentEm.innerHTML = append;
+} 
+
+function createSubTab(key, skillset) {
+    const div = document.createElement("div");
+    div.className = "subtab";
+    div.textContent = key;
+    div.dataset.key = key;
+
+    div.onclick = () => {
+        document.querySelectorAll(".subtab").forEach(t => t.classList.remove("active"));
+        div.classList.add("active");
+
+        let rawData = skillset || "Content not found";
+
+            if (rawData) {
+                renderSkillset(rawData);
+            } else {
+            }
+    };
+
+    SubTabsEm.appendChild(div);
+}
+
+function renderCharacter(character) {
+    const characterInfo = character.CharacterInfo;
+    const skillset = character.Skillset;
+    
+    let append = `<div id="characterinfo-block">
+        <div id="characterinfo-content">
+            <div id="characterinfo-top">
+                <h2 id="characterinfo-title">
+                    <span style="text-shadow: 0 0 5px ${characterInfo.NameColors.ShadowColor}; color: ${characterInfo.NameColors.Color};">
+                        <b>${escapeHtml(characterInfo.Name)}</b>
+                    </span>
+                </h2>
+            </div>
+            <div id="characterinfo-descriptionblock">
+                <div id="characterinfo-description">${escapeHtml(characterInfo.Description)}</div>
+                <div id="characterinfo-flavortext">- ${escapeHtml(characterInfo.FlavorText)}</div>
+            </div>
+            <div id="characterinfo-copyblock">
+                <div id=${characterInfo.CCTag} class="characterinfo-copybutton">Copy</div>
+             </div>
+        </div>
+    </div>`;
 
     ContentEm.innerHTML = append;
 
@@ -362,6 +444,13 @@ function renderCharacter(character) {
             }
         };
     });
+
+    SubTabsEm.innerHTML = "";
+    subtabs.classList.remove("no-subtabs");
+    Object.keys(skillset).forEach(key => createSubTab(key, skillset[key]));
+
+    const firstTab = SubTabsEm.querySelector(".subtab");
+    if (firstTab) firstTab.click();
 } 
 
 function createTab(key) {
