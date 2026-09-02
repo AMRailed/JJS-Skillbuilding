@@ -4,286 +4,7 @@
 <meta charset="UTF-8">
 <title>Skillbuilder Characters</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<style>
-    * { box-sizing: border-box; }
-    body {
-        margin: 0;
-        background: #0f0f0f;
-        color: #eaeaea;
-        font-family: Arial, Helvetica, sans-serif;
-        overflow-x: hidden;
-    }
-    #container { display: flex; flex-direction: column; min-height: 100vh; }
-	
-	#tabs {
-        width: 100%;
-        background: #151515;
-        border-bottom: 2px solid #222;
-        overflow-x: auto;
-        padding: 8px 0;
-
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-    .tab {
-        display: inline-block   ;
-        padding: 14px 18px;
-        cursor: pointer;
-        color: #ccc;
-        transition: all .2s;
-    }
-    .tab:hover { background: #1f1f1f; color: #fff; }
-    .tab.active {
-        background: #272727;
-        color: #ffffff;
-    }
-
-	#subtabs {
-        width: 100%;
-        background: #151515;
-        border-bottom: 2px solid #222;
-        border-top: 2px solid #222;
-        overflow-x: auto;
-        padding: 8px 0;
-
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-    .no-subtabs { display: none; }
-    .subtab {
-        display: inline-block   ;
-        padding: 14px 18px;
-        cursor: pointer;
-        color: #ccc;
-        transition: all .2s;
-    }
-    .subtab:hover { background: #1f1f1f; color: #fff; }
-    .subtab.active {
-        background: #272727;
-        color: #ffffff;
-    }
-
-    #characterinfo-block {
-        background:#1e293b;
-        border:1px solid #334155;
-        border-radius:12px;
-        box-shadow:0 4px 12px rgba(0,0,0,0.3);
-        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;max-width:650px;
-        color:#e2e8f0;
-        overflow:hidden;
-        margin:10px auto;
-    }
-
-    #characterinfo-top {
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        margin-bottom:0px;
-    }
-
-    #characterinfo-title {
-        margin:0;
-        font-size:20px;
-        font-weight:800;
-        letter-spacing:0.5px;
-        padding:10px 15px;  
-    }
-
-    #characterinfo-descriptionblock {
-        background:transparent;
-        border:1px solid #334155;
-        border-top:10px solid #38bdf8;
-        border-radius:6px;
-        padding:6px 10px;
-        margin:10px 12px 10px 12px;
-    }
-
-    #characterinfo-description {
-        font-size:13px;
-        line-height:1.35;
-        font-weight:400;
-        color:#ffffff;
-        white-space:pre-line;
-    }
-
-    #characterinfo-flavortext {
-        font-size:13px;
-        line-height:1.35;
-        font-weight:400;
-        font-style:italic;
-        text-indent: 30px;
-        color:#a9a9a9;
-        white-space:pre-line;
-    }
-
-    #characterinfo-copyblock {
-        background:transparent;
-        border:1px solid #334155;
-        align-items:center;
-        border-radius:6px;
-        padding:6px 10px;
-        margin:10px 12px 10px 12px;
-        padding: 10px 6px;
-    }
-    
-    .characterinfo-copybutton {
-        background:#5d789d;
-        padding:4px 12px 4px 12px;
-        border-radius:6px;
-        font-size:13px;
-        font-weight:700;
-        text-align:center;
-    }
-    .characterinfo-copybutton:hover { background: #34517a; color: #fff; }
-
-    #skillset-block {
-        background:#1e293b;
-        border:1px solid #334155;
-        border-radius:12px;
-        box-shadow:0 4px 12px rgba(0,0,0,0.3);
-        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;max-width:650px;
-        color:#e2e8f0;
-        overflow:hidden;
-        margin:10px auto;
-    }
-
-    #skillset-content {
-        padding:4px 12px 0px 12px;
-        background:#0f172a;
-        border-bottom:1px solid #334155;
-    }
-
-    #skillset-top {
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        margin-bottom:0px;
-    }
-
-    #skillset-title {
-        margin:0;
-        font-size:20px;
-        font-weight:800;
-        color:#ffffff;
-        letter-spacing:0.5px;
-        padding:10px 15px;
-    }
-
-    #skillset-tag {
-        color:#ffffff;
-        font-size:14px;
-        font-weight:800;
-        text-transform:uppercase;
-        padding:4px 12px;
-        border-radius:4px;
-        letter-spacing:0.5px;
-        position:relative;
-        top: 2px;
-        bottom: 2px;
-    }
-
-    #skillset-subcontent {
-        display:flex;
-        gap:12px;
-        align-items:flex-start;
-    }
-
-    #skillset-subsubcontent {
-        flex:1;
-        display:flex;
-        flex-direction:column;
-        gap:6px;
-    }
-
-    #skillset-descriptionblock {
-        background:transparent;
-        border:1px solid #334155;
-        border-left:10px solid #38bdf8;
-        border-radius:6px;
-        padding:6px 10px;
-    }
-
-    #skillset-description {
-        font-size:13px;
-        line-height:1.35;
-        font-weight:400;
-        color:#ffffff;
-        white-space:pre-line;
-    }
-
-    #skillset-flavortext {
-        font-size:13px;
-        line-height:1.35;
-        font-weight:400;
-        font-style:italic;
-        text-indent: 30px;
-        color:#a9a9a9;
-        white-space:pre-line;
-    }
-
-    #skillset-propertyblock {
-        display:flex;
-        flex-wrap:wrap;
-        gap:2px;
-        align-items:flex-start;
-    }
-
-    #skillset-property {
-        display:inline-block;
-        color: white;
-        font-size:9px;
-        font-weight:800;
-        text-transform:uppercase;
-        padding:3px 10px;
-        border-radius:20px;
-        letter-spacing:0.5px;
-    }
-
-    #skillset-demonstration {
-        display:flex;
-        gap:12px;
-        align-items:flex-start;
-    }
-
-    #skillset-demonstration-content {
-        height:auto;
-        width:auto;
-        background:gray;
-        border:1.5px solid white;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-    }
-
-    #skillset-data {
-        display:flex;
-        background:#0f172a;
-    }
-
-    #skillset-subdata {
-        flex:1;
-        padding:4px 6px;
-        text-align:center;
-        border-right:1px solid #334155;
-    }
-
-    #skillset-subdata-title {
-        font-size:10px;
-        font-weight:700;
-        color:#94a3b8;
-        text-transform:uppercase;
-        letter-spacing:0.5px;
-        margin-bottom:0px;
-    }
-
-    #skillset-subdata-content {
-        font-size:13px;
-        font-weight:700;
-        color:#cbd5e1;
-    }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="container">
@@ -322,26 +43,30 @@ function render(text) {
     SubContentEm.innerHTML = "";
 }
 
-function renderSkillset(skillset) {
+function renderSkill(contentblock, skill) {
     let append = ``;
 
-    Object.keys(skillset).forEach(key => {
-        let item = skillset[key];
+    Object.keys(skill).forEach(key => {
+        let item = skill[key];
         let properties = ``;
         let skilldata = ``;
 
-        Object.keys(item.Properties).forEach(propKey => {
+        if (item.Properties) {
+            Object.keys(item.Properties).forEach(propKey => {
             let prop = item.Properties[propKey];
             properties += `<div id="skillset-property" style="background: #020202;">${escapeHtml(prop)}</div>`;
         });
+        }
 
-        Object.keys(item.Data).forEach(dataKey => {
-            let data = item.Data[dataKey];
-            skilldata += `<div id="skillset-subdata">
-                <div id="skillset-subdata-title">${escapeHtml(dataKey)}</div>
-                <div id="skillset-subdata-content">${escapeHtml(data)}</div>
-            </div>`;
-        });
+        if (item.Data) {
+            Object.keys(item.Data).forEach(dataKey => {
+                let data = item.Data[dataKey];
+                skilldata += `<div id="skillset-subdata">
+                    <div id="skillset-subdata-title">${escapeHtml(dataKey)}</div>
+                    <div id="skillset-subdata-content">${escapeHtml(data)}</div>
+                </div>`;
+            });
+        }
 
         append += `
     <div id="skillset-block">
@@ -380,8 +105,17 @@ function renderSkillset(skillset) {
 
     });
 
-    SubContentEm.innerHTML = append;
+    contentblock.innerHTML = append;
 } 
+
+function createSkillBlock(key, skill) {
+    const div = document.createElement("div");
+    div.className = "skillblock";
+
+    SubContentEm.appendChild(div);
+    renderSkill(div, skill);
+    return div;
+}
 
 function createSubTab(key, skillset) {
     const div = document.createElement("div");
@@ -396,7 +130,8 @@ function createSubTab(key, skillset) {
         let rawData = skillset || "Content not found";
 
             if (rawData) {
-                renderSkillset(rawData);
+                SubContentEm.innerHTML = "";
+                Object.keys(skillset).forEach(key => createSkillBlock(key, skillset[key]));
             } else {
             }
     };
